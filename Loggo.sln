@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loggo", "Loggo\Loggo.csproj", "{B5726E7F-0DEE-470D-B06D-466849A68062}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loggo.Example", "Loggo.Example\Loggo.Example.csproj", "{FA4240BE-9413-4738-AE26-BBFA53C1AF87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loggo.Tests", "Loggo.Tests\Loggo.Tests.csproj", "{089D0CD1-4EDC-4E07-A6A2-05D0F8EEFEF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5726E7F-0DEE-470D-B06D-466849A68062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5726E7F-0DEE-470D-B06D-466849A68062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5726E7F-0DEE-470D-B06D-466849A68062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5726E7F-0DEE-470D-B06D-466849A68062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA4240BE-9413-4738-AE26-BBFA53C1AF87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA4240BE-9413-4738-AE26-BBFA53C1AF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA4240BE-9413-4738-AE26-BBFA53C1AF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA4240BE-9413-4738-AE26-BBFA53C1AF87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{089D0CD1-4EDC-4E07-A6A2-05D0F8EEFEF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{089D0CD1-4EDC-4E07-A6A2-05D0F8EEFEF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{089D0CD1-4EDC-4E07-A6A2-05D0F8EEFEF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{089D0CD1-4EDC-4E07-A6A2-05D0F8EEFEF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
