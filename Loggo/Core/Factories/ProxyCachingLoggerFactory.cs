@@ -21,7 +21,10 @@ namespace Loggo.Core.Factories
 			?? CreateInternalLogger();
 
 		public ILogger<T> CreateInternalLogger() =>
-			PushCachedLogger(new ProxyInternalLogger(this, Factory.CreateLogger()));
+			CreateInternalLogger(logger => logger);
+
+		public ILogger<T> CreateInternalLogger(Func<ILogger<T>, ILogger<T>> mapper) =>
+			PushCachedLogger(new ProxyInternalLogger(this, mapper(Factory.CreateLogger())));
 
 		private ILogger<T> PeekCachedLogger() =>
 			LoggerCache.Count > 0
