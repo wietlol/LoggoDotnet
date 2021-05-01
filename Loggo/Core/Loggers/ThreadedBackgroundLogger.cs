@@ -15,7 +15,7 @@ namespace Loggo.Core.Loggers
 		private Boolean IsRunning { get; set; }
 		private Boolean MustFlush { get; set; }
 
-		public ThreadedBackgroundLogger(ILogger<T> logger, Int32 sleepDuration)
+		public ThreadedBackgroundLogger(ILogger<T> logger, TimeSpan sleepDuration)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger), $"'{nameof(logger)}' is not allowed to be null.");
 			IsRunning = true;

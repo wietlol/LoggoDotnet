@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Loggo.Api;
 
@@ -15,7 +16,7 @@ namespace Loggo.Core.Loggers
 		private Boolean IsRunning { get; set; }
 		private Boolean MustFlush { get; set; }
 
-		public AsyncBackgroundLogger(ILogger<T> logger, Int32 sleepDuration)
+		public AsyncBackgroundLogger(ILogger<T> logger, TimeSpan sleepDuration)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger), $"'{nameof(logger)}' is not allowed to be null.");
 			IsRunning = true;
