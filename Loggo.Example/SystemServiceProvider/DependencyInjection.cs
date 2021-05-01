@@ -28,9 +28,6 @@ namespace Loggo.Example.SystemServiceProvider
 				.Decorate<ILoggerFactory<CommonLog>>(factory =>
 					LoggerFactory(() =>
 					{
-						Console.WriteLine("");
-						Console.WriteLine("created new filter");
-						Console.WriteLine("");
 						var filter = new TriggerableLevelFilter<CommonLog>(
 							CommonLogSeverity.Information,
 							CommonLogSeverity.Error,
