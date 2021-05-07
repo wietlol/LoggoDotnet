@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+    <metadata>
+        <id>Loggo</id>
+        <version>$version$</version>
+        <authors>Wietlol</authors>
+        <owners>Wietlol</owners>
+        <description>Basic lightweight Logging library.</description>
+        <dependencies>
+            <dependency id="Microsoft.Extensions.Logging" version="5.0.0" />
+            <dependency id="Newtonsoft.Json" version="12.0.1" />
+        </dependencies>
+    </metadata>
+</package>
