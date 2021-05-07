@@ -7,7 +7,7 @@ namespace Loggo.Microsoft
 		public EventId Map(global::Microsoft.Extensions.Logging.EventId value) =>
 			new EventId(
 				value.Id,
-				value.Name
+				value.Name ?? "unknown"
 			);
 	}
 }
