@@ -16,7 +16,7 @@ namespace Loggo.Core.Factories
 		public ILogger<T> CreateLogger() =>
 			new ProxyCachedLogger(this);
 
-		private ILogger<T> GetOrCreateLogger() =>
+		public ILogger<T> GetOrCreateLogger() =>
 			PeekCachedLogger()
 			?? CreateInternalLogger();
 
@@ -26,12 +26,12 @@ namespace Loggo.Core.Factories
 		public ILogger<T> CreateInternalLogger(Func<ILogger<T>, ILogger<T>> mapper) =>
 			PushCachedLogger(new ProxyInternalLogger(this, mapper(Factory.CreateLogger())));
 
-		private ILogger<T> PeekCachedLogger() =>
+		public ILogger<T> PeekCachedLogger() =>
 			LoggerCache.Count > 0
 				? LoggerCache.Peek()
 				: null;
 
-		private ILogger<T> PopCachedLogger() =>
+		public ILogger<T> PopCachedLogger() =>
 			LoggerCache.Count > 0
 				? LoggerCache.Pop()
 				: null;
@@ -83,7 +83,7 @@ namespace Loggo.Core.Factories
 				Factory.GetOrCreateLogger().LogAll(logs);
 
 			public void Flush() =>
-				Factory.PopCachedLogger().Flush();
+				Factory.GetOrCreateLogger().Flush();
 
 			public void Dispose()
 			{
