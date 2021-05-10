@@ -12,13 +12,15 @@ namespace Loggo.Microsoft
 		private static Common.EventId DefaultScopeEventId { get; } = new Common.EventId(1857276255, "internal-scope");
 
 		public Api.ILogger<CommonLog> Logger { get; }
+		public String CategoryName { get; }
 
 		private LogLevelMapper LogLevelMapper { get; } = new LogLevelMapper();
 		private EventIdMapper EventIdMapper { get; } = new EventIdMapper();
 
-		public MicrosoftCommonLoggerAdapter(Api.ILogger<CommonLog> logger)
+		public MicrosoftCommonLoggerAdapter(Api.ILogger<CommonLog> logger, String categoryName = null)
 		{
 			Logger = logger;
+			CategoryName = categoryName;
 		}
 
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, String> formatter)
@@ -27,7 +29,8 @@ namespace Loggo.Microsoft
 				LogLevelMapper.Map(logLevel),
 				EventIdMapper.Map(eventId),
 				MapState(logLevel, state, exception, formatter),
-				exception
+				exception,
+				CategoryName != null ? new LogSource(CategoryName) : default
 			);
 		}
 
