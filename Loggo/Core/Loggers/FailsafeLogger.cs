@@ -1,22 +1,21 @@
 using System;
 using System.Collections.Generic;
 using Loggo.Api;
-using Loggo.Common;
 
 namespace Loggo.Core.Loggers
 {
-	public class FailsafeLogger : ILogger<CommonLog>
+	public class FailsafeLogger : ILogger
 	{
 		private static EventId FailsafeErrorEventId { get; } = new EventId(1972263977, "internal-logging-error");
 
-		public ILogger<CommonLog> Logger { get; }
+		public ILogger Logger { get; }
 
-		public FailsafeLogger(ILogger<CommonLog> logger)
+		public FailsafeLogger(ILogger logger)
 		{
 			Logger = logger;
 		}
 
-		public void Log(CommonLog log)
+		public void Log(LogEntry log)
 		{
 			try
 			{
@@ -28,7 +27,7 @@ namespace Loggo.Core.Loggers
 			}
 		}
 
-		public void LogAll(IReadOnlyCollection<CommonLog> logs)
+		public void LogAll(IReadOnlyCollection<LogEntry> logs)
 		{
 			try
 			{

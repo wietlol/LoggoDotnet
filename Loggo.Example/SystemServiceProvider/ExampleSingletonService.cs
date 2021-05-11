@@ -1,13 +1,14 @@
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
+using Loggo.Core.Loggers;
 
 namespace Loggo.Example.SystemServiceProvider
 {
 	public class ExampleSingletonService
 	{
-		private ILogger<CommonLog> Logger { get; }
+		private ILogger Logger { get; }
 
-		public ExampleSingletonService(ILogger<CommonLog> logger)
+		public ExampleSingletonService(ILogger logger)
 		{
 			Logger = new ScopedSourceLogger(logger, source => source.Plus("ExampleSingletonService"));
 		}

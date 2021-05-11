@@ -6,16 +6,16 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class ThreadedBackgroundLogger<T> : ILogger<T>
+	public class ThreadedBackgroundLogger : ILogger
 	{
-		public ILogger<T> Logger { get; }
+		public ILogger Logger { get; }
 
-		private ConcurrentQueue<T> LogQueue { get; } = new ConcurrentQueue<T>();
+		private ConcurrentQueue<LogEntry> LogQueue { get; } = new ConcurrentQueue<LogEntry>();
 		private Thread WorkerThread { get; }
 		private Boolean IsRunning { get; set; }
 		private Boolean MustFlush { get; set; }
 
-		public ThreadedBackgroundLogger(ILogger<T> logger, TimeSpan sleepDuration)
+		public ThreadedBackgroundLogger(ILogger logger, TimeSpan sleepDuration)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger), $"'{nameof(logger)}' is not allowed to be null.");
 			IsRunning = true;
@@ -42,18 +42,18 @@ namespace Loggo.Core.Loggers
 
 		private void PassLogs()
 		{
-			var logs = new List<T>();
-			while (LogQueue.TryDequeue(out T log))
+			var logs = new List<LogEntry>();
+			while (LogQueue.TryDequeue(out LogEntry log))
 				logs.Add(log);
 			Logger.LogAll(logs);
 		}
 
-		public void Log(T log) =>
+		public void Log(LogEntry log) =>
 			LogQueue.Enqueue(log);
 
-		public void LogAll(IReadOnlyCollection<T> logs)
+		public void LogAll(IReadOnlyCollection<LogEntry> logs)
 		{
-			foreach (T log in logs)
+			foreach (LogEntry log in logs)
 				LogQueue.Enqueue(log);
 		}
 

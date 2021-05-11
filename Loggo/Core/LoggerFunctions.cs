@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Loggo.Api;
 
-namespace Loggo.Common
+namespace Loggo.Core
 {
 	public static class LoggerFunctions
 	{
 		private static LogSource DefaultSource { get; } = new LogSource(Enumerable.Empty<String>());
-		private static Guid DefaultSequenceId { get; } = Guid.Empty;
+		private static Guid DefaultSequenceId => Guid.Empty;
 
 		public static void Log(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			ILogSeverity severity,
 			EventId eventId,
 			Object data,
@@ -20,7 +20,7 @@ namespace Loggo.Common
 			Guid? sequenceId = null,
 			IDictionary<String, Object> metadata = null
 		) =>
-			logger.Log(new CommonLog(
+			logger.Log(new LogEntry(
 				severity,
 				DateTime.UtcNow,
 				source ?? DefaultSource,
@@ -32,7 +32,7 @@ namespace Loggo.Common
 			));
 
 		public static void LogTrace(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,
@@ -43,7 +43,7 @@ namespace Loggo.Common
 			logger.Log(CommonLogSeverity.Trace, eventId, data, exception, source, sequenceId, metadata);
 
 		public static void LogDebug(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,
@@ -54,7 +54,7 @@ namespace Loggo.Common
 			logger.Log(CommonLogSeverity.Debug, eventId, data, exception, source, sequenceId, metadata);
 
 		public static void LogInformation(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,
@@ -65,7 +65,7 @@ namespace Loggo.Common
 			logger.Log(CommonLogSeverity.Information, eventId, data, exception, source, sequenceId, metadata);
 
 		public static void LogWarning(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,
@@ -76,7 +76,7 @@ namespace Loggo.Common
 			logger.Log(CommonLogSeverity.Warning, eventId, data, exception, source, sequenceId, metadata);
 
 		public static void LogError(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,
@@ -87,7 +87,7 @@ namespace Loggo.Common
 			logger.Log(CommonLogSeverity.Error, eventId, data, exception, source, sequenceId, metadata);
 
 		public static void LogCritical(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			Object data,
 			Exception exception = null,

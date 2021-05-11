@@ -4,17 +4,17 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class ProxyLogger<T> : ILogger<T>
+	public class ProxyLogger : ILogger
 	{
-		public Func<ILogger<T>> LoggerSupplier { get; }
+		public Func<ILogger> LoggerSupplier { get; }
 
-		public ProxyLogger(Func<ILogger<T>> loggerSupplier) =>
+		public ProxyLogger(Func<ILogger> loggerSupplier) =>
 			LoggerSupplier = loggerSupplier;
 
-		public void Log(T log) =>
+		public void Log(LogEntry log) =>
 			LoggerSupplier().Log(log);
 
-		public void LogAll(IReadOnlyCollection<T> logs) =>
+		public void LogAll(IReadOnlyCollection<LogEntry> logs) =>
 			LoggerSupplier().LogAll(logs);
 
 		public void Flush() =>

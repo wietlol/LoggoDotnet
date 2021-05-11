@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Loggo.Api;
-using Loggo.Core.Loggers;
+using Loggo.Core.Streams;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Loggo.Json
 {
-	public static class JsonLogger
+	public static class JsonLogOutput
 	{
 		public static JsonSerializerSettings DefaultSettings => new JsonSerializerSettings
 		{
@@ -24,9 +24,9 @@ namespace Loggo.Json
 			},
 		};
 
-		public static ILogger<Object> CreateLogger(ILogger<String> logger, JsonSerializerSettings settings = null) =>
-			new ConverterLogger<Object, String>(
-				logger,
+		public static ILogOutputStream<Object> CreateLogOutputStream(ILogOutputStream<String> outputStream, JsonSerializerSettings settings = null) =>
+			new ConverterOutputStream<Object, String>(
+				outputStream,
 				it => JsonConvert.SerializeObject(it, settings ?? DefaultSettings)
 			);
 	}

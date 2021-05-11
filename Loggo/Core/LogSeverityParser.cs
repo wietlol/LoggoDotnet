@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using Loggo.Api;
 
-namespace Loggo.Common
+namespace Loggo.Core
 {
 	public class LogSeverityParser
 	{

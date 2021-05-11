@@ -1,17 +1,18 @@
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
 using Loggo.Core.Factories;
+using Loggo.Core.Loggers;
 
 namespace Loggo.Example.SystemServiceProvider
 {
 	public class ExampleProgram
 	{
-		private ILogger<CommonLog> Logger { get; }
-		private ProxyCachingLoggerFactory<CommonLog> ProxyCachingLoggerFactory { get; }
+		private ILogger Logger { get; }
+		private ProxyCachingLoggerFactory ProxyCachingLoggerFactory { get; }
 		public ExampleTransientService ServiceA { get; }
 		public ExampleSingletonService ServiceB { get; }
 		
-		public ExampleProgram(ILogger<CommonLog> logger, ProxyCachingLoggerFactory<CommonLog> proxyCachingLoggerFactory, ExampleTransientService serviceA, ExampleSingletonService serviceB)
+		public ExampleProgram(ILogger logger, ProxyCachingLoggerFactory proxyCachingLoggerFactory, ExampleTransientService serviceA, ExampleSingletonService serviceB)
 		{
 			Logger = new ScopedSourceLogger(logger, source => source.Plus("ExampleProgram"));
 			ProxyCachingLoggerFactory = proxyCachingLoggerFactory;

@@ -5,23 +5,23 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class AutoBulkLogger<T> : ILogger<T>
+	public class AutoBulkLogger : ILogger
 	{
-		public ILogger<T> Logger { get; }
+		public ILogger Logger { get; }
 		public Int32 MaxBufferSize { get; }
 
-		private T[] Buffer { get; }
+		private LogEntry[] Buffer { get; }
 		private Int32 BufferSize { get; set; }
 
-		public AutoBulkLogger(ILogger<T> logger, Int32 maxBufferSize)
+		public AutoBulkLogger(ILogger logger, Int32 maxBufferSize)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger), $"'{nameof(logger)}' is not allowed to be null.");
 			MaxBufferSize = maxBufferSize;
-			Buffer = new T[maxBufferSize];
+			Buffer = new LogEntry[maxBufferSize];
 			BufferSize = 0;
 		}
 
-		public void Log(T log)
+		public void Log(LogEntry log)
 		{
 			if (BufferSize >= MaxBufferSize)
 				Flush(log);
@@ -29,16 +29,16 @@ namespace Loggo.Core.Loggers
 				Buffer[BufferSize++] = log;
 		}
 
-		public void LogAll(IReadOnlyCollection<T> logs)
+		public void LogAll(IReadOnlyCollection<LogEntry> logs)
 		{
 			if (BufferSize + logs.Count > MaxBufferSize)
 				Flush(logs);
 			else
-				foreach (T log in logs)
+				foreach (LogEntry log in logs)
 					Buffer[BufferSize++] = log;
 		}
 
-		private void Flush(T log)
+		private void Flush(LogEntry log)
 		{
 			Logger.LogAll(
 				Buffer
@@ -49,7 +49,7 @@ namespace Loggo.Core.Loggers
 			BufferSize = 0;
 		}
 
-		private void Flush(IEnumerable<T> logs)
+		private void Flush(IEnumerable<LogEntry> logs)
 		{
 			Logger.LogAll(
 				Buffer

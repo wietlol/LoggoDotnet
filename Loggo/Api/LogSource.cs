@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Loggo.Common
+namespace Loggo.Api
 {
 	public class LogSource
 	{
@@ -59,7 +59,7 @@ namespace Loggo.Common
 
 		public override int GetHashCode()
 		{
-			return (Names != null ? Names.GetHashCode() : 0);
+			return Names != null ? Names.GetHashCode() : 0;
 		}
 		// ReSharper restore ArrangeThisQualifier
 		// ReSharper restore ConvertIfStatementToReturnStatement

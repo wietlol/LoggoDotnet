@@ -5,33 +5,36 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class MultiLogger<T> : ILogger<T>
+	public class MultiLogger : ILogger
 	{
-		public IReadOnlyList<ILogger<T>> Loggers { get; }
+		public IReadOnlyList<ILogger> Loggers { get; }
 
-		public MultiLogger(IEnumerable<ILogger<T>> loggers)
+		public MultiLogger(IEnumerable<ILogger> loggers)
 		{
 			Loggers = loggers?.ToList() ?? throw new ArgumentNullException(nameof(loggers), $"'{nameof(loggers)}' is not allowed to be null.");
 		}
 
-		public void Log(T log) =>
-			LogAll(new[] {log});
-
-		public void LogAll(IReadOnlyCollection<T> logs)
+		public void Log(LogEntry log)
 		{
-			foreach (ILogger<T> logger in Loggers)
+			foreach (ILogger logger in Loggers)
+				logger.Log(log);
+		}
+
+		public void LogAll(IReadOnlyCollection<LogEntry> logs)
+		{
+			foreach (ILogger logger in Loggers)
 				logger.LogAll(logs);
 		}
 
 		public void Flush()
 		{
-			foreach (ILogger<T> logger in Loggers)
+			foreach (ILogger logger in Loggers)
 				logger.Flush();
 		}
 
 		public void Dispose()
 		{
-			foreach (ILogger<T> logger in Loggers)
+			foreach (ILogger logger in Loggers)
 				logger.Dispose();
 		}
 	}

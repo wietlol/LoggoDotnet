@@ -1,13 +1,14 @@
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
+using Loggo.Core.Loggers;
 
 namespace Loggo.Example.SystemServiceProvider
 {
 	public class ExampleTransientService
 	{
-		private ILogger<CommonLog> Logger { get; }
+		private ILogger Logger { get; }
 
-		public ExampleTransientService(ILogger<CommonLog> logger)
+		public ExampleTransientService(ILogger logger)
 		{
 			Logger = new ScopedSourceLogger(logger, source => source.Plus("ExampleTransientService"));
 		}

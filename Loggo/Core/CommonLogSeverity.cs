@@ -1,7 +1,7 @@
 using System;
 using Loggo.Api;
 
-namespace Loggo.Common
+namespace Loggo.Core
 {
 	public class CommonLogSeverity : ILogSeverity
 	{

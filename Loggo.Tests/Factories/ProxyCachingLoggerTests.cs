@@ -1,42 +1,37 @@
 using System;
 using System.Collections.Generic;
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
 using Loggo.Core.Factories;
 using Loggo.Core.Loggers;
-using Loggo.Json;
+using Loggo.Core.Streams;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Loggo.Tests.Factories
 {
 	public class ProxyCachingLoggerTests
 	{
-		private readonly ITestOutputHelper _testOutputHelper;
-
-		public ProxyCachingLoggerTests(ITestOutputHelper testOutputHelper)
-		{
-			_testOutputHelper = testOutputHelper;
-		}
-
 		[Fact]
 		public void AssertThat_ProxyCachingLogger_AlwaysProxiesToTheLatestLogger()
 		{
-			var logList = new List<CommonLog>();
-			var listLogger = new GenericLogger<CommonLog>(log => logList.Add(log));
-			var factory = new ProxyCachingLoggerFactory<CommonLog>(
-				new GenericLoggerFactory<CommonLog>(() =>
+			var logList = new List<LogEntry>();
+			var outputStream = new ListOutputStream<LogEntry>(logList);
+			var factory = new ProxyCachingLoggerFactory(
+				new GenericLoggerFactory(() =>
 				{
 					var sequenceId = Guid.NewGuid();
-					return new ScopedSequenceLogger(listLogger, guid => sequenceId);
+					return new ScopedSequenceLogger(
+						new OutputLogger(outputStream),
+						guid => sequenceId
+					);
 				})
 			);
-			ILoggerFactory<CommonLog> genericFactory = factory;
+			ILoggerFactory genericFactory = factory;
 
 			Assert.Empty(logList);
 
 			// without internal logger, it will make one on-demand
-			using ILogger<CommonLog> firstLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("outer-logger"));
+			using ILogger firstLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("outer-logger"));
 			firstLogger.LogInformation(new EventId(1, "log-1"), new { });
 			firstLogger.LogInformation(new EventId(1, "log-1"), new { });
 			// assert both logs are registered
@@ -46,9 +41,9 @@ namespace Loggo.Tests.Factories
 			Assert.Equal(logList[0].SequenceId, logList[1].SequenceId);
 
 			// create a new scoped internal logger
-			using (ILogger<CommonLog> _ = factory.CreateInternalLogger())
+			using (ILogger _ = factory.CreateInternalLogger())
 			{
-				using ILogger<CommonLog> scopedLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("scoped-logger-1"));
+				using ILogger scopedLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("scoped-logger-1"));
 
 				scopedLogger.LogInformation(new EventId(2, "log-2"), new { });
 				scopedLogger.LogInformation(new EventId(2, "log-2"), new { });
@@ -81,9 +76,9 @@ namespace Loggo.Tests.Factories
 			Assert.Equal(logList[0].SequenceId, logList[6].SequenceId);
 
 			// create a new scoped internal logger
-			using (ILogger<CommonLog> _ = factory.CreateInternalLogger())
+			using (ILogger _ = factory.CreateInternalLogger())
 			{
-				using ILogger<CommonLog> scopedLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("scoped-logger-2"));
+				using ILogger scopedLogger = new ScopedSourceLogger(genericFactory.CreateLogger(), source => source.Plus("scoped-logger-2"));
 
 				scopedLogger.LogInformation(new EventId(5, "log-5"), new { });
 				scopedLogger.LogInformation(new EventId(5, "log-5"), new { });
@@ -105,13 +100,6 @@ namespace Loggo.Tests.Factories
 				Assert.Equal(logList[10].SequenceId, logList[11].SequenceId);
 				Assert.Equal(logList[8].SequenceId, logList[10].SequenceId);
 			}
-
-			// std::out
-			foreach (CommonLog log in logList)
-				_testOutputHelper.WriteLine($"{log.EventId.Name} :: {log.SequenceId} :: {log.Source}");
-			var stdLogger = new GenericLogger<String>(log => _testOutputHelper.WriteLine(log));
-			ILogger<Object> jsonLogger = JsonLogger.CreateLogger(stdLogger);
-			jsonLogger.LogAll(logList);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Loggo.Common;
+using Loggo.Api;
 using Xunit;
 
 namespace Loggo.Tests.Data

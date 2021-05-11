@@ -1,8 +1,8 @@
 using System;
 
-namespace Loggo.Common
+namespace Loggo.Api
 {
-	public struct EventId
+	public readonly struct EventId
 	{
 		public Int32 Id { get; }
 		public String Name { get; }

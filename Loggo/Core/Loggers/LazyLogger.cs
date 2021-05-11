@@ -4,18 +4,18 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class LazyLogger<T> : ILogger<T>
+	public class LazyLogger : ILogger
 	{
-		public ILoggerFactory<T> Factory { get; }
-		private ILogger<T> Logger { get; set; }
+		public ILoggerFactory Factory { get; }
+		private ILogger Logger { get; set; }
 		private Object FactoryLock { get; } = new Object();
 
-		public LazyLogger(ILoggerFactory<T> factory)
+		public LazyLogger(ILoggerFactory factory)
 		{
 			Factory = factory ?? throw new ArgumentNullException(nameof(factory), $"'{nameof(factory)}' is not allowed to be null.");
 		}
 
-		private ILogger<T> GetLogger()
+		private ILogger GetLogger()
 		{
 			if (Logger == null)
 				lock (FactoryLock)
@@ -24,10 +24,10 @@ namespace Loggo.Core.Loggers
 			return Logger;
 		}
 
-		public void Log(T log) =>
+		public void Log(LogEntry log) =>
 			GetLogger().Log(log);
 
-		public void LogAll(IReadOnlyCollection<T> logs) =>
+		public void LogAll(IReadOnlyCollection<LogEntry> logs) =>
 			GetLogger().LogAll(logs);
 
 		public void Flush() =>

@@ -1,23 +1,22 @@
 using System;
 using System.Collections.Generic;
-using Loggo.Common;
-using Loggo.Common.Monitoring;
+using Loggo.Api;
+using Loggo.Core;
+using Loggo.Core.Monitoring;
 using Microsoft.Extensions.Logging;
 using EventId = Microsoft.Extensions.Logging.EventId;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Loggo.Microsoft
 {
 	public class MicrosoftCommonLoggerAdapter : ILogger
 	{
-		private static Common.EventId DefaultScopeEventId { get; } = new Common.EventId(1857276255, "internal-scope");
+		private static Api.EventId DefaultScopeEventId { get; } = new Api.EventId(1857276255, "internal-scope");
 
-		public Api.ILogger<CommonLog> Logger { get; }
+		public Api.ILogger Logger { get; }
 		public String CategoryName { get; }
 
-		private LogLevelMapper LogLevelMapper { get; } = new LogLevelMapper();
-		private EventIdMapper EventIdMapper { get; } = new EventIdMapper();
-
-		public MicrosoftCommonLoggerAdapter(Api.ILogger<CommonLog> logger, String categoryName = null)
+		public MicrosoftCommonLoggerAdapter(Api.ILogger logger, String categoryName = null)
 		{
 			Logger = logger;
 			CategoryName = categoryName;
@@ -45,7 +44,7 @@ namespace Loggo.Microsoft
 		public IDisposable BeginScope<TState>(TState state) =>
 			state switch
 			{
-				Common.EventId commonEventId => new MonitoredScope(Logger, CommonLogSeverity.Information, commonEventId, DateTime.UtcNow, new LogSource("internal-scope")),
+				Api.EventId commonEventId => new MonitoredScope(Logger, CommonLogSeverity.Information, commonEventId, DateTime.UtcNow, new LogSource("internal-scope")),
 				EventId eventId => new MonitoredScope(Logger, CommonLogSeverity.Information, EventIdMapper.Map(eventId), DateTime.UtcNow, new LogSource("internal-scope")),
 				_ => new MonitoredScope(Logger, CommonLogSeverity.Information, DefaultScopeEventId, DateTime.UtcNow, new LogSource("internal-scope")),
 			};

@@ -4,17 +4,17 @@ using Loggo.Api;
 
 namespace Loggo.Core.Loggers
 {
-	public class FilteredLogger<T> : ILogger<T>
+	public class FilteredLogger : ILogger
 	{
-		public ILogger<T> Logger { get; }
+		public ILogger Logger { get; }
 
 		// if the filter returns true, the log will be delegated to the inner logger
-		public Func<T, ILogFilter, Boolean> Filter { get; }
+		public Func<LogEntry, ILogFilter, Boolean> Filter { get; }
 
-		private LinkedList<T> FilteredLogs { get; } = new LinkedList<T>();
+		private LinkedList<LogEntry> FilteredLogs { get; } = new LinkedList<LogEntry>();
 		private ILogFilter LogFilterObject { get; }
 
-		public FilteredLogger(ILogger<T> logger, Func<T, Boolean> filter)
+		public FilteredLogger(ILogger logger, Func<LogEntry, Boolean> filter)
 			: this(logger, (log, _) => filter(log))
 		{
 			if (filter == null)
@@ -22,14 +22,14 @@ namespace Loggo.Core.Loggers
 			// empty proxy constructor
 		}
 
-		public FilteredLogger(ILogger<T> logger, Func<T, ILogFilter, Boolean> filter)
+		public FilteredLogger(ILogger logger, Func<LogEntry, ILogFilter, Boolean> filter)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger), $"'{nameof(logger)}' is not allowed to be null.");
 			Filter = filter ?? throw new ArgumentNullException(nameof(filter), $"'{nameof(filter)}' is not allowed to be null.");
 			LogFilterObject = new LogFilter(this);
 		}
 
-		public void Log(T log)
+		public void Log(LogEntry log)
 		{
 			if (Filter(log, LogFilterObject))
 				Logger.Log(log);
@@ -37,10 +37,10 @@ namespace Loggo.Core.Loggers
 				FilteredLogs.AddLast(log);
 		}
 
-		public void LogAll(IReadOnlyCollection<T> logs)
+		public void LogAll(IReadOnlyCollection<LogEntry> logs)
 		{
-			var logged = new List<T>();
-			foreach (T log in logs)
+			var logged = new List<LogEntry>();
+			foreach (LogEntry log in logs)
 			{
 				if (Filter(log, LogFilterObject))
 					logged.Add(log);
@@ -53,14 +53,14 @@ namespace Loggo.Core.Loggers
 
 		private void ProcessFilteredLogs()
 		{
-			LinkedList<T> list = FilteredLogs;
-			LinkedListNode<T> node = list.First;
-			var logs = new List<T>();
+			LinkedList<LogEntry> list = FilteredLogs;
+			LinkedListNode<LogEntry> node = list.First;
+			var logs = new List<LogEntry>();
 			while (node != null)
 			{
-				LinkedListNode<T> next = node.Next;
+				LinkedListNode<LogEntry> next = node.Next;
 
-				T log = node.Value;
+				LogEntry log = node.Value;
 				if (Filter(log, LogFilterObject))
 				{
 					list.Remove(node);
@@ -85,9 +85,9 @@ namespace Loggo.Core.Loggers
 
 		private class LogFilter : ILogFilter
 		{
-			private FilteredLogger<T> FilteredLogger { get; }
+			private FilteredLogger FilteredLogger { get; }
 
-			public LogFilter(FilteredLogger<T> filteredLogger)
+			public LogFilter(FilteredLogger filteredLogger)
 			{
 				FilteredLogger = filteredLogger;
 			}

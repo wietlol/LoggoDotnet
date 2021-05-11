@@ -1,10 +1,10 @@
-using Loggo.Common;
+using Loggo.Api;
 
 namespace Loggo.Microsoft
 {
-	public class EventIdMapper
+	public static class EventIdMapper
 	{
-		public EventId Map(global::Microsoft.Extensions.Logging.EventId value) =>
+		public static EventId Map(global::Microsoft.Extensions.Logging.EventId value) =>
 			new EventId(
 				value.Id,
 				value.Name ?? "unknown"

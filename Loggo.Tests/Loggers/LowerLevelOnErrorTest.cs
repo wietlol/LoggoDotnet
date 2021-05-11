@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Loggo.Common;
+using Loggo.Api;
 using Loggo.Core;
 using Loggo.Core.Loggers;
+using Loggo.Core.Streams;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Loggo.Tests.Loggers
 {
@@ -12,14 +12,15 @@ namespace Loggo.Tests.Loggers
 		[Fact]
 		public void AssertThat_Errors_CauseTracesToBeLoggedAsWell()
 		{
-			IList<CommonLog> logList = new List<CommonLog>();
-			var filter = new TriggerableLevelFilter<CommonLog>(
+			IList<LogEntry> logList = new List<LogEntry>();
+			var filter = new TriggerableLevelFilter(
 				CommonLogSeverity.Information,
 				CommonLogSeverity.Error,
 				CommonLogSeverity.Trace
 			);
-			using var logger = new FilteredLogger<CommonLog>(
-				new GenericLogger<CommonLog>(log => logList.Add(log)),
+			var outputStream = new ListOutputStream<LogEntry>(logList);
+			using var logger = new FilteredLogger(
+				new OutputLogger(outputStream),
 				filter.Apply
 			);
 

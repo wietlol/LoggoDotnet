@@ -1,7 +1,8 @@
 using System;
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
 using Loggo.Core.Loggers;
+using Loggo.Core.Streams;
 using Loggo.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,8 +21,10 @@ namespace Loggo.Tests.Loggers
 		[Fact]
 		public void AssertThat_Exceptions_CanBeConvertedToJson()
 		{
-			var stdLogger = new GenericLogger<String>(log => _testOutputHelper.WriteLine(log));
-			ILogger<Object> logger = JsonLogger.CreateLogger(stdLogger);
+			ILogOutputStream<Object> outputStream = JsonLogOutput.CreateLogOutputStream(
+				new GenericOutputStream<String>(log => _testOutputHelper.WriteLine(log))
+			);
+			using var logger = new OutputLogger(outputStream);
 
 			try
 			{

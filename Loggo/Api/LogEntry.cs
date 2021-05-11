@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Loggo.Api;
 
-namespace Loggo.Common
+namespace Loggo.Api
 {
-	public class CommonLog : IMeasurableLog
+	public class LogEntry
 	{
 		public ILogSeverity Severity { get; }
 		public DateTime Moment { get; }
@@ -15,7 +14,7 @@ namespace Loggo.Common
 		public IDictionary<String, Object> Metadata { get; }
 		public Exception Exception { get; }
 
-		public CommonLog(
+		public LogEntry(
 			ILogSeverity severity,
 			DateTime moment,
 			LogSource source,
@@ -35,7 +34,7 @@ namespace Loggo.Common
 			Exception = exception;
 		}
 
-		public CommonLog With(
+		public LogEntry With(
 			ILogSeverity severity = null,
 			DateTime? moment = null,
 			LogSource source = null,
@@ -45,7 +44,7 @@ namespace Loggo.Common
 			IDictionary<String, Object> metadata = null,
 			Exception exception = null
 		) =>
-			new CommonLog(
+			new LogEntry(
 				severity ?? Severity,
 				moment ?? Moment,
 				source ?? Source,

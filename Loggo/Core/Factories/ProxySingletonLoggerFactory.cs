@@ -4,21 +4,21 @@ using Loggo.Api;
 
 namespace Loggo.Core.Factories
 {
-	public class ProxySingletonLoggerFactory<T> : ILoggerFactory<T>
+	public class ProxySingletonLoggerFactory : ILoggerFactory
 	{
-		public ILoggerFactory<T> LoggerFactory { get; }
-		private ILogger<T> Logger { get; set; }
+		public ILoggerFactory LoggerFactory { get; }
+		private ILogger Logger { get; set; }
 		private Object FactoryLock { get; } = new Object();
 
-		public ProxySingletonLoggerFactory(ILoggerFactory<T> loggerFactory)
+		public ProxySingletonLoggerFactory(ILoggerFactory loggerFactory)
 		{
 			LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory), $"'{nameof(loggerFactory)}' is not allowed to be null.");
 		}
 
-		public ILogger<T> CreateLogger() =>
+		public ILogger CreateLogger() =>
 			new ProxySingletonLogger(this);
 
-		private ILogger<T> GetLogger()
+		private ILogger GetLogger()
 		{
 			if (Logger == null)
 				lock (FactoryLock)
@@ -26,19 +26,19 @@ namespace Loggo.Core.Factories
 			return Logger;
 		}
 
-		private class ProxySingletonLogger : ILogger<T>
+		private class ProxySingletonLogger : ILogger
 		{
-			private ProxySingletonLoggerFactory<T> Factory { get; }
+			private ProxySingletonLoggerFactory Factory { get; }
 
-			public ProxySingletonLogger(ProxySingletonLoggerFactory<T> factory)
+			public ProxySingletonLogger(ProxySingletonLoggerFactory factory)
 			{
 				Factory = factory;
 			}
 
-			public void Log(T log) =>
+			public void Log(LogEntry log) =>
 				Factory.GetLogger().Log(log);
 
-			public void LogAll(IReadOnlyCollection<T> logs) =>
+			public void LogAll(IReadOnlyCollection<LogEntry> logs) =>
 				Factory.GetLogger().LogAll(logs);
 
 			public void Flush() =>

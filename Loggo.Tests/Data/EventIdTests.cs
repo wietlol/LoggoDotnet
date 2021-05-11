@@ -1,4 +1,4 @@
-using Loggo.Common;
+using Loggo.Api;
 using Xunit;
 
 namespace Loggo.Tests.Data

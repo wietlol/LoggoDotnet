@@ -4,59 +4,59 @@ using Loggo.Api;
 
 namespace Loggo.Core.Factories
 {
-	public class ProxyCachingLoggerFactory<T> : ILoggerFactory<T>
+	public class ProxyCachingLoggerFactory : ILoggerFactory
 	{
-		public ILoggerFactory<T> Factory { get; }
+		public ILoggerFactory Factory { get; }
 
-		private Stack<ILogger<T>> LoggerCache { get; } = new Stack<ILogger<T>>();
+		private Stack<ILogger> LoggerCache { get; } = new Stack<ILogger>();
 
-		public ProxyCachingLoggerFactory(ILoggerFactory<T> factory) =>
+		public ProxyCachingLoggerFactory(ILoggerFactory factory) =>
 			Factory = factory ?? throw new ArgumentNullException(nameof(factory), $"'{nameof(factory)}' is not allowed to be null.");
 
-		public ILogger<T> CreateLogger() =>
+		public ILogger CreateLogger() =>
 			new ProxyCachedLogger(this);
 
-		public ILogger<T> GetOrCreateLogger() =>
+		public ILogger GetOrCreateLogger() =>
 			PeekCachedLogger()
 			?? CreateInternalLogger();
 
-		public ILogger<T> CreateInternalLogger() =>
+		public ILogger CreateInternalLogger() =>
 			CreateInternalLogger(logger => logger);
 
-		public ILogger<T> CreateInternalLogger(Func<ILogger<T>, ILogger<T>> mapper) =>
+		public ILogger CreateInternalLogger(Func<ILogger, ILogger> mapper) =>
 			PushCachedLogger(new ProxyInternalLogger(this, mapper(Factory.CreateLogger())));
 
-		public ILogger<T> PeekCachedLogger() =>
+		public ILogger PeekCachedLogger() =>
 			LoggerCache.Count > 0
 				? LoggerCache.Peek()
 				: null;
 
-		public ILogger<T> PopCachedLogger() =>
+		public ILogger PopCachedLogger() =>
 			LoggerCache.Count > 0
 				? LoggerCache.Pop()
 				: null;
 
-		private ILogger<T> PushCachedLogger(ILogger<T> logger)
+		private ILogger PushCachedLogger(ILogger logger)
 		{
 			LoggerCache.Push(logger);
 			return logger;
 		}
 
-		private class ProxyInternalLogger : ILogger<T>
+		private class ProxyInternalLogger : ILogger
 		{
-			private ProxyCachingLoggerFactory<T> Factory { get; }
-			private ILogger<T> Logger { get; }
+			private ProxyCachingLoggerFactory Factory { get; }
+			private ILogger Logger { get; }
 
-			public ProxyInternalLogger(ProxyCachingLoggerFactory<T> factory, ILogger<T> logger)
+			public ProxyInternalLogger(ProxyCachingLoggerFactory factory, ILogger logger)
 			{
 				Factory = factory;
 				Logger = logger;
 			}
 
-			public void Log(T log) =>
+			public void Log(LogEntry log) =>
 				Logger.Log(log);
 
-			public void LogAll(IReadOnlyCollection<T> logs) =>
+			public void LogAll(IReadOnlyCollection<LogEntry> logs) =>
 				Logger.LogAll(logs);
 
 			public void Flush() =>
@@ -69,17 +69,17 @@ namespace Loggo.Core.Factories
 			}
 		}
 
-		private class ProxyCachedLogger : ILogger<T>
+		private class ProxyCachedLogger : ILogger
 		{
-			private ProxyCachingLoggerFactory<T> Factory { get; }
+			private ProxyCachingLoggerFactory Factory { get; }
 
-			public ProxyCachedLogger(ProxyCachingLoggerFactory<T> factory) =>
+			public ProxyCachedLogger(ProxyCachingLoggerFactory factory) =>
 				Factory = factory;
 
-			public void Log(T log) =>
+			public void Log(LogEntry log) =>
 				Factory.GetOrCreateLogger().Log(log);
 
-			public void LogAll(IReadOnlyCollection<T> logs) =>
+			public void LogAll(IReadOnlyCollection<LogEntry> logs) =>
 				Factory.GetOrCreateLogger().LogAll(logs);
 
 			public void Flush() =>

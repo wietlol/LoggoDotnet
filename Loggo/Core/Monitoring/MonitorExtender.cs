@@ -2,12 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Loggo.Api;
 
-namespace Loggo.Common.Monitoring
+namespace Loggo.Core.Monitoring
 {
 	public static class MonitorExtender
 	{	
 		public static async Task<T> WithinMonitoredScopeAsync<T>(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			LogSource source,
 			Func<Task<T>> body,
@@ -19,7 +19,7 @@ namespace Loggo.Common.Monitoring
 		}
 		
 		public static T WithinMonitoredScope<T>(
-			this ILogger<CommonLog> logger,
+			this ILogger logger,
 			EventId eventId,
 			LogSource source,
 			Func<T> body,

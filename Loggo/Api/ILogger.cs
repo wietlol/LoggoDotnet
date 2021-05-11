@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Loggo.Api
 {
-	public interface ILogger<in T> : IDisposable
+	public interface ILogger : IDisposable
 	{
 		void Flush();
 
-		void Log(T log);
+		void Log(LogEntry log);
 
-		void LogAll(IReadOnlyCollection<T> logs);
+		void LogAll(IReadOnlyCollection<LogEntry> logs);
 	}
 }

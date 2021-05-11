@@ -3,16 +3,16 @@ using Loggo.Api;
 
 namespace Loggo.Core.Factories
 {
-	public class GenericLoggerFactory<T> : ILoggerFactory<T>
+	public class GenericLoggerFactory : ILoggerFactory
 	{
-		public Func<ILogger<T>> CreateFunction { get; }
+		public Func<ILogger> CreateFunction { get; }
 
-		public GenericLoggerFactory(Func<ILogger<T>> createFunction)
+		public GenericLoggerFactory(Func<ILogger> createFunction)
 		{
 			CreateFunction = createFunction ?? throw new ArgumentNullException(nameof(createFunction), $"'{nameof(createFunction)}' is not allowed to be null.");
 		}
 
-		public ILogger<T> CreateLogger() =>
+		public ILogger CreateLogger() =>
 			CreateFunction();
 	}
 }

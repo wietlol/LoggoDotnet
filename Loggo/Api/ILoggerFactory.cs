@@ -1,7 +1,7 @@
 namespace Loggo.Api
 {
-	public interface ILoggerFactory<in T>
+	public interface ILoggerFactory
 	{
-		ILogger<T> CreateLogger();
+		ILogger CreateLogger();
 	}
 }

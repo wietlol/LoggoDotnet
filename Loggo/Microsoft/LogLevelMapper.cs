@@ -1,13 +1,13 @@
 using System;
 using Loggo.Api;
-using Loggo.Common;
+using Loggo.Core;
 using Microsoft.Extensions.Logging;
 
 namespace Loggo.Microsoft
 {
-	public class LogLevelMapper
+	public static class LogLevelMapper
 	{
-		public ILogSeverity Map(LogLevel value) =>
+		public static ILogSeverity Map(LogLevel value) =>
 			value switch
 			{
 				LogLevel.Trace => CommonLogSeverity.Trace,
@@ -17,7 +17,7 @@ namespace Loggo.Microsoft
 				LogLevel.Error => CommonLogSeverity.Error,
 				LogLevel.Critical => CommonLogSeverity.Critical,
 				LogLevel.None => CommonLogSeverity.None,
-				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+				_ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
 			};
 	}
 }

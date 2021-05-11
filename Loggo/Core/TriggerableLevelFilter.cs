@@ -4,8 +4,7 @@ using Loggo.Core.Loggers;
 
 namespace Loggo.Core
 {
-	public class TriggerableLevelFilter<T>
-		where T : IMeasurableLog
+	public class TriggerableLevelFilter
 	{
 		public Double TriggerLevel { get; }
 		public Double TargetLevel { get; }
@@ -25,7 +24,7 @@ namespace Loggo.Core
 			TargetLevel = targetLevel;
 		}
 
-		public Boolean Apply(T log, ILogFilter logFilter)
+		public Boolean Apply(LogEntry log, ILogFilter logFilter)
 		{
 			Double logValue = log.Severity.Value;
 			if (logValue >= TriggerLevel && TargetLevel < CurrentLevel)
