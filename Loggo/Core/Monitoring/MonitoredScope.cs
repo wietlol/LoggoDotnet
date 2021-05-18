@@ -32,6 +32,7 @@ namespace Loggo.Core.Monitoring
 				EventId,
 				new ScopeResult(
 					Source,
+					EventId,
 					Start,
 					DateTime.UtcNow
 				),
