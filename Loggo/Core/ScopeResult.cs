@@ -11,7 +11,7 @@ namespace Loggo.Core
 		public DateTime? End { get; }
 
 		public Int64? ElapsedMilliseconds => (Int64?) (End - Start)?.TotalMilliseconds;
-		public String Message => $"Scope '{Source}' ran for {ElapsedMilliseconds}ms, starting at {Start}.";
+		public String Message => $"Scope '{Source}' ran for {ElapsedMilliseconds}ms, starting at {Start:O}.";
 
 		public ScopeResult(
 			LogSource source,
