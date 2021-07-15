@@ -57,7 +57,7 @@ namespace Loggo.Core.Loggers
 					new EventId(1462484660, "aggregated-scopes"),
 					new
 					{
-						scopes = Scopes,
+						scopes = Scopes.ToList(),
 						elapsedMilliseconds,
 						message = $"Scope '{last.Source}' ran for {elapsedMilliseconds}ms, starting at {last.Start:O}.",
 					}
