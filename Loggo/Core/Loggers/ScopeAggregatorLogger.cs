@@ -34,10 +34,10 @@ namespace Loggo.Core.Loggers
 			if (log.Data is IScopeResult scope)
 			{
 				Scopes.Add(scope);
-				return false;
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		public void Flush()
